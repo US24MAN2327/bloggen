@@ -1,0 +1,7 @@
+Flask
+torch
+transformers
+firebase-admin
+uuid
+datetime
+logging
