@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Generator</title>
+
+    <!-- Include Bootstrap for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS for enhanced styling and animations -->
+    <style>
+        /* Fullscreen animated gradient background */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            text-align: center;
+            overflow-x: hidden;
+            background: linear-gradient(45deg, #ffdd57, #ff6347, #6a5acd);
+            background-size: 600% 600%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        /* Animated gradient background */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Heading animation */
+        h1 {
+            margin-top: 50px;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffdd57;
+            animation: slideDown 1.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Form container with translucent background */
+        .container {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        /* Prompt Textarea styling with animations */
+        #prompt {
+            width: 100%;
+            border-radius: 10px;
+            padding: 10px;
+            transition: box-shadow 0.3s ease-in-out, transform 0.2s;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #prompt:focus {
+            outline: none;
+            box-shadow: 0px 0px 15px #ffdd57;
+            transform: scale(1.02);
+        }
+
+        /* Button animations and hover effects */
+        #generate-btn {
+            background-color: #ffdd57;
+            border: none;
+            color: black;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        #generate-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, #ffd700, #ffdd57);
+            transition: all 0.4s ease-in-out;
+            z-index: -1;
+        }
+
+        #generate-btn:hover:before {
+            left: -50%;
+            top: -50%;
+        }
+
+        #generate-btn:hover {
+            background-color: #ffcc00;
+            transform: translateY(-3px);
+        }
+
+        /* New Dashboard button styles */
+        #dashboard-btn {
+            background-color: #6a5acd;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        #dashboard-btn:hover {
+            background-color: #5b4fbf;
+            transform: translateY(-3px);
+        }
+
+        /* Blog content display box with animations */
+        #generated_blog {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        /* Fade in animation for blog content */
+        @keyframes fadeInUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Styling for the generated blog content */
+        #blog_content {
+            text-align: left;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #f5f5f5;
+            word-wrap: break-word;
+            opacity: 0;
+            animation: appearText 2s forwards ease-in-out;
+        }
+
+        /* Appear text animation for the blog content */
+        @keyframes appearText {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container col-lg-6 col-md-8 col-sm-10">
+        <h1>Generate a Blog Post</h1>
+
+        <form id="blogForm">
+            <div class="mb-3">
+                <label for="prompt" class="form-label">Enter a topic or prompt:</label>
+                <textarea id="prompt" name="prompt" rows="4" class="form-control"></textarea>
+            </div>
+            <button type="submit" id="generate-btn" class="btn btn-lg">Generate Blog</button>
+        </form>
+
+        <div id="generated_blog" class="mt-5">
+            <h2 class="text-warning">Generated Blog Content:</h2>
+            <p id="blog_content"></p>
+        </div>
+
+        <!-- Add a button to redirect to the dashboard -->
+        <div class="mt-4">
+            <a href="/dashboard">
+                <button id="dashboard-btn" class="btn btn-lg">Go to Dashboard</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#blogForm').submit(function (event) {
+                event.preventDefault();
+                let prompt = $('#prompt').val();
+                $('#blog_content').css('opacity', '0'); // Hide blog content while loading new text
+                $.ajax({
+                    url: '/generate_blog',
+                    method: 'POST',
+                    data: { prompt: prompt },
+                    success: function (response) {
+                        $('#blog_content').text(response.blog_content).css('opacity', '1'); // Show content with animation
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
