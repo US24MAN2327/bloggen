@@ -5,3 +5,4 @@ firebase-admin
 uuid
 datetime
 logging
+gunicorn  # Required to serve Flask on Render
